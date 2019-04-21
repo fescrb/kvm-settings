@@ -24,14 +24,14 @@ If the switch to AMD happens in the future, the above steps must be changed. Loo
 
 The following packages must be installed:
 
--**qemu-kvm:** The virtualization program.
--**ovmf:** UEFI bios firmware needed to boot the VM into Windows 10.
+* **qemu-kvm:** The virtualization program.
+* **ovmf:** UEFI bios firmware needed to boot the VM into Windows 10.
 
 Following the tutorial, these were also installed: 
 
--**qemu-utils**: Utilities for qemu. Unused atm but might come in handy in the future.
--**seabios**: Legacy BIOS image. I see no reason for it for Win10.
--**hugepages**: Change memory page size. To improve performance. Might be useful in the futute.
+* **qemu-utils**: Utilities for qemu. Unused atm but might come in handy in the future.
+* **seabios**: Legacy BIOS image. I see no reason for it for Win10.
+* **hugepages**: Change memory page size. To improve performance. Might be useful in the futute.
 
 
 
@@ -47,5 +47,5 @@ Following the tutorial, these were also installed:
 
 The following is a list of hardware improvements that could be made for the next version of this setup.
 
--**PCI SATA Controller:** PCI passthrough is fast and (now) familiar technology. A SATA PCI card would allow us to isolate it to hand it to the VM.
--**Full Drive Handover:** If the above wishlist item does not pan out. It would be good to fix handing over the full drive to qemu instead of having lvm over it. We've seen this working with the large storage drive. And it would enable us to access the windows drive more easily and boot straight from it. 
+* **PCI SATA Controller:** PCI passthrough is fast and (now) familiar technology. A SATA PCI card would allow us to isolate it to hand it to the VM.
+* **Full Drive Handover:** If the above wishlist item does not pan out. It would be good to fix handing over the full drive to qemu instead of having lvm over it. We've seen this working with the large storage drive. And it would enable us to access the windows drive more easily and boot straight from it. 
