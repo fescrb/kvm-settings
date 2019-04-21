@@ -6,7 +6,7 @@ For the initial setup [this tutorial was followed](https://heiko-sieger.info/run
 
 ## Initial Setup
 
-As we tipically run an Intel CPU. The fisrt step is enabling VT-d on the BIOS settings, [which is the hardware support for virtualization of IO](https://software.intel.com/en-us/articles/intel-virtualization-technology-for-directed-io-vt-d-enhancing-intel-platforms-for-efficient-virtualization-of-io-devices). This was already enabled for this computer.
+As I typically run an Intel CPU. The fisrt step is enabling VT-d on the BIOS settings, [which is the hardware support for virtualization of IO](https://software.intel.com/en-us/articles/intel-virtualization-technology-for-directed-io-vt-d-enhancing-intel-platforms-for-efficient-virtualization-of-io-devices). This was already enabled for this computer.
 
 Then the Linux kernel must be given extra arguments to enable io memory mapping. Edit the grub file (`/etc/default/grub`) and add the following argument to the `GRUB_CMDLINE_LINUX_DEFAULT` line:
 
@@ -20,7 +20,9 @@ Then update grub with the change:
 
 `sudo update-grub`
 
-If the switch to AMD happens in the future, the above steps must be changed. Look up how.
+**Restart the system.** IOMMU is needed for some of the following steps.
+
+If the switch to AMD happens in the future, the above steps must be changed. Look up how. 
 
 The following packages must be installed:
 
@@ -33,11 +35,20 @@ Following the tutorial, these were also installed:
 * **seabios**: Legacy BIOS image. I see no reason for it for Win10.
 * **hugepages**: Change memory page size. To improve performance. Might be useful in the futute.
 
-
+As far as I can tell, these are not required.
 
 ## PCI Passthrough
 
+This feature enables giving control of PCI slots to the VM, with bare metal-like performance. For this setup we use this feature with two different pieces of hardware:
+
+* **GPU:** Hardware acceletion for games.
+* **USB3.0 Card:** A PCIx4 card which gives two USB3.0 sockets and a header. Used to provide USB3.0 connections to the front of the case with incompatible motherboards in the past.
+
+The steps taken to enable the passthrough are documented in the [pci-passthrough](https://github.com/fescrb/kvm-settings/tree/master/pci-passthrough) subfolder.
+
 ## Storage
+
+
 
 ## The Script
 
