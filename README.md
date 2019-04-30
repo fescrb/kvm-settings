@@ -54,6 +54,19 @@ The steps taken to enable the passthrough are documented in the [pci-passthrough
 
 ### First Run
 
+## Resolved Issues
+
+The following issues were fixed satisfactorily:
+
+### Crackling Audio In Guest
+
+Solved through matching the audio quality to the pulseaudio server running in the host.
+
+## Ongoing Issues
+
+Will be removed as fixes are found:
+* **Guest cannot recover from sleep mode:** When the guest system goes to sleep/hibernation I've been unable to recover it. Only restarting the VM works. Disabled automatic hibernation in Windows for a workaround.
+
 ## Wishlist for Future 
 
 The following is a list of hardware improvements that could be made for the next version of this setup.
