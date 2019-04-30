@@ -9,8 +9,8 @@ do
         for DEVICE in $(ls $DEVICES_PATH);
         do
             MODALIAS="$(cat /sys/bus/pci/devices/$DEVICE/modalias)"
-            BUS_ID="$(echo $DEVICE | cut -f 2,3 -d ":")"
-            LSPCI_DEVICE_LINE=$(lspci -nn | grep $BUS_ID)
+            BUS_ID="$DEVICE"
+            LSPCI_DEVICE_LINE=$(lspci -Dnn | grep $BUS_ID)
             echo "Group $DEVICE_GROUP: $LSPCI_DEVICE_LINE $MODALIAS" 
         done
     fi
