@@ -98,12 +98,64 @@ pci:v00099086d01203EC2sv0000sd9sd00003EC2bc06sc01920
 
 ### Info Script
 
-The script `print-pci-info.sh` found in this folder prints all of the information described in this section into stdout.
+The script `print-pci-info.sh` found in this folder prints all of the information described above into stdout.
 
 ## Assigning The Driver
 
+As stated above the vfio driver must be assigned to any piece of hardware we wish to pass through to the client. It is possible to assign the driver automatically at the startup or manually at client startup. The reasons you might opt for the latter is are:
+
+* Automatic assignment doesn't work.
+* Assigning the vfio will make the hardware non-functional to the host. 
+
+On the other hand some hardware might be best set up as automatic assignment, as swapping the driver at runtime might have side effects. For example the GPU driver.
+
 ### Through Modprobe Configuration
 
+Modprobe is the program used to automatically detect drivers for devices. We will be adding new configuration rules in order to autmatically assign drivers. Make a new `.conf` file in `/etc/modprobe.d/`. The name of the file is not important.
 
+First we need to add the alias for the vfio-pci to the file:
+
+```
+alias pci:v00099086d01203EC2sv0000sd9sd00003EC2bc06sc01920 vfio-pci
+alias pci:v00099086d01203EC2sv0000sd9s23944j1s2bc06sc01454 vfio-pci
+```
+
+Then, we have to let the vfio-pci driver know the vendor-device ids of the devices that will be assigned:
+
+```
+options vfio-pci ids=1234:5678,9abc:def0
+```
+
+This configuration will take effect on the next time you boot the host.
 
 ### CLI Commands
+
+There are two steps to reassign the driver from the command line. Unassigning the device's current driver and assigning the new one. Find out which driver the device has with the command `lspci -k`:
+
+```
+[...]
+04:00.0 USB controller: USB 3.0 Host Controller 
+	Subsystem: USB 3.0 Host Controller
+	Kernel driver in use: xhci_hcd
+[...]
+```
+
+The output above is for a PCI USB 3.0 card. We will be giving the client control of this device so it has it's own USB ports. First we can unbind it from the xhci_hcd module by writing it's address to a special file in the sys/ filesystem. Each module in use by the PCI bus ports has a folder in `/sys/bus/pci/drivers/`, writing the address to the `unbind` file in that folder will remove the kernel module from that device. in this particular example we will use the command:
+
+`echo "0000:04:00.0" >/sys/bus/pci/drivers/xhci_hcd/unbind`
+
+We can now bind this device to the vfio driver. This is done with a similar process. Much like the `unbind` file exists, the `bind` file does the opposite job. For this example:
+
+`echo "0000:04:00.0" >/sys/bus/pci/drivers/vfio-pci/bind`
+
+The process can be reversed in order to give the host system control over this device again.
+
+## Other
+
+### Prevent VGA Arbitration
+
+VGA Arbitration is a legacy task performed when more than one device existed in the same machine. It is not required for this setup and can interfere. To disable this add this line to a `.conf` file in the `/etc/modprobe.d/` folder (either make a new one or append to the one you created in the Modprobe Configuration section above):
+
+```
+options vfio-pci disable_vga=1
+```
